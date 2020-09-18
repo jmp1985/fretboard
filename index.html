@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8"/> 
+  <title>Fretboard</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script type="text/javascript" src="js/utils.js"></script>
+  <script type="text/javascript" src="js/scales.js"></script>
+  <script type="text/javascript" src="js/chords.js"></script>
+  <script type="text/javascript" src="js/fretboard.js"></script>
+  <script type="text/javascript" src="js/fretboard_diagram.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+
+</head>
+
+<body onload="load()">
+  
+  <div class="header">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+      <a class="pure-menu-heading" href="">Fretboard</a>
+      <ul class="pure-menu-list">
+          <li class="pure-menu-item">
+            <form class="pure-form" onChange="loadContent()">
+              <fieldset>
+                <div class="pure-control-group">
+                  <label for="select-scale">Scale</label>
+                  <select name="scales" id="select-scale">
+                  </select>
+                  <label for="select-tonic">Tonic</label>
+                  <select name="tonic" id="select-tonic">
+                  </select>
+                </div>
+              </fieldset>
+            </form>
+          </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="content-wrapper">
+    <div class="content">
+    
+      <div class="pure-g">
+        <div class="pure-u">
+            <h2 class="content-head is-center">Scale information</h2>
+            <table class="pure-table" id="scale-information-table"></table> 
+        </div>
+      </div>
+      
+      <div class="pure-g">
+        <div class="pure-u">
+            <h2 class="content-head is-center">Fretboard diagram</h2>
+            <div class="pure-g">
+              <form class="pure-form pure-u-3-5" onChange="loadFretboardDiagram()">
+                <legend>Configure diagram</legend>
+                <div class="pure-g">
+                  <div class="pure-u-1-2">
+                    <label for="select-note-labels">Note labels</label>
+                    <select name="note-labels" id="select-note-labels">
+                      <option value="none" selected="selected">None</option>
+                      <option value="degree">Scale degree</option>
+                      <option value="intervals">Scale intervals</option>
+                      <option value="notes">Scale notes</option>
+                    </select>
+                  </div>
+                  <div class="pure-u-1-2">
+                    <label for="select-first-fret">Show frets</label>
+                    <select name="first-fret" id="select-first-fret">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                    </select>
+                    <label for="select-last-fret">to</label>
+                    <select name="last-fret" id="select-last-fret">
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                      <option value="21">21</option>
+                      <option value="22">22</option>
+                      <option value="23">23</option>
+                      <option value="24">24</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div id="fretboard-diagram"></div>
+        </div>
+      </div>
+      
+      <div class="pure-g">
+        <div class="pure-u">
+            <h2 class="content-head is-center">Scale patterns</h2>
+            <div id="scale-patterns"></div>
+        </div>
+      </div>
+      
+      <div class="pure-g">
+        <div class="pure-u">
+            <h2 class="content-head is-center">Compatible chords</h2>
+            <table class="pure-table" id="chord-information-table"></table> 
+        </div>
+      </div>
+    
+    </div>
+  </div>
+
+</body>
+
+</html>
