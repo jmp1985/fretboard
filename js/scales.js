@@ -66,6 +66,256 @@ const pitchTable = [
 
 
 /**
+ * Store a dictionary of scales
+ */
+const scaleTable = [
+  {
+    "id" : "major",
+    "name" : "Diatonic family",
+    "steps" : [ 2, 2, 1, 2, 2, 2, 1 ],
+    "modes" : [
+      {
+        "id" : "ionian",
+        "name" : "Ionian (Major)",
+      },
+      {
+        "id" : "dorian",
+        "name" : "Dorian",
+      },
+      {
+        "id" : "phrygian",
+        "name" : "Phrygian",
+      },
+      {
+        "id" : "lydian",
+        "name" : "Lydian",
+      },
+      {
+        "id" : "mixolydian",
+        "name" : "Mixolydian",
+      },
+      {
+        "id" : "aeolian",
+        "name" : "Aeolian (Minor)",
+      },
+      {
+        "id" : "locrian",
+        "name" : "Locrian",
+      },
+    ],
+  }, 
+  {
+    "id" : "harmonic_minor",
+    "name" : "Harmonic Minor family",
+    "steps" : [ 2, 1, 2, 2, 1, 3, 1 ],
+    "modes" : [
+      {
+        "id" : "harmonic_minor",
+        "name" : "Harmonic Minor",
+      },
+      {
+        "id" : "locrian_6",
+        "name" : "Locrian ♮6",
+      },
+      {
+        "id" : "ionian_#5",
+        "name" : "Ionian ♯5",
+      },
+      {
+        "id" : "dorian_#4",
+        "name" : "Dorian ♯4 (Ukrainian Dorian)",
+      },
+      {
+        "id" : "phrygian_3",
+        "name" : "Phrygian ♮3 (Phrygian Dominant)",
+      },
+      {
+        "id" : "lydian_#2",
+        "name" : "Lydian ♯2 (Hungarian Major)",
+      },
+      {
+        "id" : "super_locrian_bb7",
+        "name" : "Super Locrian 𝄫7",
+      },
+    ],
+  },
+  {
+    "id" : "melodic_minor",
+    "name" : "Melodic Minor family",
+    "steps" : [ 2, 1, 2, 2, 2, 2, 1 ],
+    "modes" : [
+      {
+        "id" : "melodic_minor",
+        "name" : "Melodic Minor",
+      },
+      {
+        "id" : "phrygian_#6",
+        "name" : "Phrygian ♯6 (Assyrian)",
+      },
+      {
+        "id" : "lydian_#5",
+        "name" : "Lydian ♯5",
+      },
+      {
+        "id" : "mixolydian_#4",
+        "name" : "Mixolydian ♯4 (Overtone)",
+      },
+      {
+        "id" : "mixoylydian_b6",
+        "name" : "Mixolydian ♭6 (Melodic Major)",
+      },
+      {
+        "id" : "locrian_2",
+        "name" : "Locrian ♮2 (Half-Diminished)",
+      },
+      {
+        "id" : "super_locrian",
+        "name" : "Super Locrian (Altered Dominant)",
+      },
+    ],
+  },
+  {
+    "id" : "double_harmonic",
+    "name" : "Double Harmonic family",
+    "steps" : [ 1, 3, 1, 2, 1, 3, 1 ],
+    "modes" : [
+      {
+        "id" : "double_harmonic_major",
+        "name" : "Double Harmonic (Gypsy) Major",
+      },
+      {
+        "id" : "lydian_#2_#6",
+        "name" : "Lydian ♯2 ♯6",
+      },
+      {
+        "id" : "ultraphrygian",
+        "name" : "Ultraphrygian",
+      },
+      {
+        "id" : "hungarian_minor",
+        "name" : "Hungarian (Gypsy) Minor",
+      },
+      {
+        "id" : "oriental",
+        "name" : "Oriental",
+      },
+      {
+        "id" : "ionian_#2_#5",
+        "name" : "Ionian ♯2 ♯5",
+      },
+      {
+        "id" : "locrain_bb3_bb7",
+        "name" : "Locrian 𝄫3 𝄫7",
+      },
+    ],
+  },
+  {
+    "id" : "persian",
+    "name" : "Persian family",
+    "steps" : [ 1, 3, 1, 1, 2, 3, 1 ],
+    "modes" : [
+      {
+        "id" : "persian",
+        "name" : "Persian",
+      },
+      {
+        "id" : "persian_2",
+        "name" : "Persian (mode 2)",
+      },
+      {
+        "id" : "persian_3",
+        "name" : "Persian (mode 3)",
+      },
+      {
+        "id" : "persian_4",
+        "name" : "Persian (mode 4)",
+      },
+      {
+        "id" : "persian_5",
+        "name" : "Persian (mode 5)",
+      },
+      {
+        "id" : "persian_6",
+        "name" : "Persian (mode 6)",
+      },
+      {
+        "id" : "persian_7",
+        "name" : "Persian (mode 7)",
+      },
+    ],
+  },
+  {
+    "id" : "major_pentatonic",
+    "name" : "Major Pentatonic family",
+    "steps" : [ 2, 2, 3, 2, 3 ],
+    "modes" : [
+      {
+        "id" : "major_pentatonic",
+        "name" : "Major Pentatonic (Ionian)",
+      },
+      {
+        "id" : "egyptian_suspended",
+        "name" : "Egyptian Suspended (Dorian)",
+      },
+      {
+        "id" : "blues_minor",
+        "name" : "Blues Minor (Phrygian)",
+      },
+      {
+        "id" : "blues_major",
+        "name" : "Blues Major (Mixolydian)",
+      },
+      {
+        "id" : "minor_pentatonic",
+        "name" : "Minor Pentatonic (Aeolian)",
+      },
+    ],
+  },
+  {
+    "id" : "hexatonic_blues_scale",
+    "name" : "Hexatonic Blues Family",
+    "steps" : [ 3, 2, 1, 1, 3, 2 ],
+    "modes" : [
+      {
+        "id" : "minor_hexatonic_blues",
+        "name" : "Minor Hexatonic Blues",
+      },
+      {
+        "id" : "major_hexatonic_blues",
+        "name" : "Major Hexatonic Blues",
+      },
+    ]
+  },
+  {
+    "id" : "diminished",
+    "name" : "Diminished (Whole-Half) family",
+    "steps" : [ 2, 1, 2, 1, 2, 1, 2, 1 ],
+    "modes" : [
+      {
+        "id" : "diminished_mode_1",
+        "name" : "Diminished (Whole-Half) mode 1",
+      },
+      {
+        "id" : "diminished_mode_2",
+        "name" : "Diminished (Whole-Half) mode 2",
+      },
+    ]
+  },
+  {
+    "id" : "whole_tone",
+    "name" : "Whole Tone family",
+    "steps" : [ 2, 2, 2, 2, 2, 2 ],
+    "modes" : [
+      {
+        "id" : "whole_tone",
+        "name" : "Whole Tone",
+      },
+    ]
+  },
+];
+
+
+/**
  * A class to represent a pitch
  */
 class Pitch {
@@ -254,222 +504,7 @@ class Note {
 };
 
 
-Note.maxIndex = Pitch.numPitches;
-
-
-/**
- * Store a dictionary of scales
- */
-const scaleTable = [
-  {
-    "id" : "major",
-    "name" : "Diatonic family",
-    "steps" : [ 2, 2, 1, 2, 2, 2, 1 ],
-    "modes" : [
-      {
-        "id" : "ionian",
-        "name" : "Ionian (Major)",
-      },
-      {
-        "id" : "dorian",
-        "name" : "Dorian",
-      },
-      {
-        "id" : "phrygian",
-        "name" : "Phrygian",
-      },
-      {
-        "id" : "lydian",
-        "name" : "Lydian",
-      },
-      {
-        "id" : "mixolydian",
-        "name" : "Mixolydian",
-      },
-      {
-        "id" : "aeolian",
-        "name" : "Aeolian (Minor)",
-      },
-      {
-        "id" : "locrian",
-        "name" : "Locrian",
-      },
-    ],
-  }, 
-  {
-    "id" : "harmonic_minor",
-    "name" : "Harmonic Minor family",
-    "steps" : [ 2, 1, 2, 2, 1, 3, 1 ],
-    "modes" : [
-      {
-        "id" : "harmonic_minor",
-        "name" : "Harmonic Minor",
-      },
-      {
-        "id" : "locrian_6",
-        "name" : "Locrian ♮6",
-      },
-      {
-        "id" : "ionian_#5",
-        "name" : "Ionian ♯5",
-      },
-      {
-        "id" : "dorian_#4",
-        "name" : "Dorian ♯4 (Ukrainian Dorian)",
-      },
-      {
-        "id" : "phrygian_3",
-        "name" : "Phrygian ♮3 (Phrygian Dominant)",
-      },
-      {
-        "id" : "lydian_#2",
-        "name" : "Lydian ♯2 (Hungarian Major)",
-      },
-      {
-        "id" : "super_locrian_bb7",
-        "name" : "Super Locrian 𝄫7",
-      },
-    ],
-  },
-  {
-    "id" : "melodic_minor",
-    "name" : "Melodic Minor family",
-    "steps" : [ 2, 1, 2, 2, 2, 2, 1 ],
-    "modes" : [
-      {
-        "id" : "melodic_minor",
-        "name" : "Melodic Minor",
-      },
-      {
-        "id" : "phrygian_#6",
-        "name" : "Phrygian ♯6 (Assyrian)",
-      },
-      {
-        "id" : "lydian_#5",
-        "name" : "Lydian ♯5",
-      },
-      {
-        "id" : "mixolydian_#4",
-        "name" : "Mixolydian ♯4 (Overtone)",
-      },
-      {
-        "id" : "mixoylydian_b6",
-        "name" : "Mixolydian ♭6 (Melodic Major)",
-      },
-      {
-        "id" : "locrian_2",
-        "name" : "Locrian ♮2 (Half-Diminished)",
-      },
-      {
-        "id" : "super_locrian",
-        "name" : "Super Locrian (Altered Dominant)",
-      },
-    ],
-  },
-  {
-    "id" : "double_harmonic",
-    "name" : "Double Harmonic family",
-    "steps" : [ 1, 3, 1, 2, 1, 3, 1 ],
-    "modes" : [
-      {
-        "id" : "double_harmonic_major",
-        "name" : "Double Harmonic (Gypsy) Major",
-      },
-      {
-        "id" : "lydian_#2_#6",
-        "name" : "Lydian ♯2 ♯6",
-      },
-      {
-        "id" : "ultraphrygian",
-        "name" : "Ultraphrygian",
-      },
-      {
-        "id" : "hungarian_minor",
-        "name" : "Hungarian (Gypsy) Minor",
-      },
-      {
-        "id" : "oriental",
-        "name" : "Oriental",
-      },
-      {
-        "id" : "ionian_#2_#5",
-        "name" : "Ionian ♯2 ♯5",
-      },
-      {
-        "id" : "locrain_bb3_bb7",
-        "name" : "Locrian 𝄫3 𝄫7",
-      },
-    ],
-  },
-  {
-    "id" : "major_pentatonic",
-    "name" : "Major Pentatonic family",
-    "steps" : [ 2, 2, 3, 2, 3 ],
-    "modes" : [
-      {
-        "id" : "major_pentatonic",
-        "name" : "Major Pentatonic (Ionian)",
-      },
-      {
-        "id" : "egyptian_suspended",
-        "name" : "Egyptian Suspended (Dorian)",
-      },
-      {
-        "id" : "blues_minor",
-        "name" : "Blues Minor (Phrygian)",
-      },
-      {
-        "id" : "blues_major",
-        "name" : "Blues Major (Mixolydian)",
-      },
-      {
-        "id" : "minor_pentatonic",
-        "name" : "Minor Pentatonic (Aeolian)",
-      },
-    ],
-  },
-  {
-    "id" : "hexatonic_blues_scale",
-    "name" : "Hexatonic Blues Family",
-    "steps" : [ 3, 2, 1, 1, 3, 2 ],
-    "modes" : [
-      {
-        "id" : "minor_hexatonic_blues",
-        "name" : "Minor Hexatonic Blues",
-      },
-      {
-        "id" : "major_hexatonic_blues",
-        "name" : "Major Hexatonic Blues",
-      },
-    ]
-  },
-  {
-    "id" : "diminished",
-    "name" : "Diminished (Whole-Half) family",
-    "steps" : [ 2, 1, 2, 1, 2, 1, 2, 1 ],
-    "modes" : [
-      {
-        "id" : "diminished_mode_1",
-        "name" : "Diminished (Whole-Half) mode 1",
-      },
-      {
-        "id" : "diminished_mode_2",
-        "name" : "Diminished (Whole-Half) mode 2",
-      },
-    ]
-  },
-  {
-    "id" : "whole_tone",
-    "name" : "Whole Tone family",
-    "steps" : [ 2, 2, 2, 2, 2, 2 ],
-    "modes" : [
-      {
-        "id" : "whole_tone",
-        "name" : "Whole Tone",
-      },
-    ]
-  },
-];
+Note.numPitches = Pitch.numPitches;
 
 
 /**
@@ -535,7 +570,7 @@ class Scale {
    * @returns The note indices of the scale
    */
   get pitchIndices() {
-    return this.semitones.map(index => (index + this.tonic.index) % Note.maxIndex);
+    return this.semitones.map(index => (index + this.tonic.index) % Note.numPitches);
   }
 
   /**

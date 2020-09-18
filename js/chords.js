@@ -16,7 +16,7 @@ class Chord {
   }
 
   get chordIndices() {
-    return this.pitchIndices.map(index => (index + Note.maxIndex - this.root.index) % Note.maxIndex);
+    return this.pitchIndices.map(index => (index + Note.numPitches - this.root.index) % Note.numPitches);
   }
 
   get formula() {

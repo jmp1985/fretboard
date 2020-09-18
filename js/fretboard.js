@@ -40,7 +40,7 @@ class Fretboard {
    * @returns The note index of the string and fret
    */
   noteIndex(string, fret) {
-    return (this.openNoteIndex(string) + fret) % Note.maxIndex;
+    return (this.openNoteIndex(string) + fret) % Note.numPitches;
   }
 
   /**
