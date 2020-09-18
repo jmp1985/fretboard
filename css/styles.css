@@ -58,6 +58,10 @@ label {
     font-size: 100%;
 }
 
+.pure-form select {
+    height: 38px;
+}
+
 /*
  * -- PURE BUTTON STYLES --
  * I want my pure-button elements to look a little different
@@ -111,10 +115,6 @@ a.pure-button-primary {
 
 .home-menu .pure-form label {
     color: white;
-}
-
-.home-menu .pure-form select {
-    height: 38px;
 }
 
 
