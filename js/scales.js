@@ -70,7 +70,7 @@ const pitchTable = [
  */
 const scaleTable = [
   {
-    "id" : "major",
+    "id" : "diatonic",
     "name" : "Diatonic family",
     "steps" : [ 2, 2, 1, 2, 2, 2, 1 ],
     "modes" : [
@@ -316,6 +316,55 @@ const scaleTable = [
 
 
 /**
+ * A table of scale patterns
+ */
+const scalePatternTable = {
+  "diatonic" : [
+    [
+      [ 7, 1, 2 ],
+      [ 5, 6 ],
+      [ 2, 3, 4 ],
+      [ 6, 7, 1 ],
+      [ 3, 4, 5 ],
+      [ 7, 1, 2 ],
+    ],
+    [
+      [ 3, 4, 5 ],
+      [ 7, 1, 2 ],
+      [ 5, 6 ],
+      [ 2, 3, 4 ],
+      [ 6, 7, 1 ],
+      [ 3, 4, 5 ],
+    ],
+    [
+      [ 6, 7, 1 ],
+      [ 3, 4, 5 ],
+      [ 7, 1, 2 ],
+      [ 5, 6 ],
+      [ 2, 3, 4 ],
+      [ 6, 7, 1 ],
+    ],
+    [
+      [ 2, 3, 4 ],
+      [ 6, 7, 1 ],
+      [ 3, 4, 5 ],
+      [ 7, 1, 2 ],
+      [ 5, 6 ],
+      [ 2, 3, 4 ],
+    ],
+    [
+      [ 5, 6 ],
+      [ 2, 3, 4 ],
+      [ 6, 7, 1 ],
+      [ 3, 4, 5 ],
+      [ 7, 1, 2 ],
+      [ 5, 6 ],
+    ],
+  ],
+}
+
+
+/**
  * A class to represent a pitch
  */
 class Pitch {
@@ -343,7 +392,7 @@ class Pitch {
   static getDiffByIndex(a, b) {
     var d = a - b;
     var n = Pitch.numPitches;
-    return d > n / 2 ? d-n : d < -6 ? -n - d : d;
+    return d > n/2 ? d-n : d < -n/2 ? n+d : d;
   }
 
   /**
@@ -516,21 +565,25 @@ class Scale {
    * Initialise the scale
    * @param id The scale id
    * @param name The name of the scale
+   * @param familyId The scale familyId
    * @param family The scale family
+   * @param family The mode of the scale
    * @param steps The steps defining the scale
    * @param tonic  The name of the tonic
    */
-  constructor(id, name, family, steps, tonic="c") {
+  constructor(id, name, familyId, family, mode, steps, tonic="c") {
 
     // Check that the steps add up
-    if (steps.reduce((a,b) => a + b, 0) != 12) {
+    if (steps.reduce((a,b) => a + b, 0) != Pitch.numPitches) {
       throw 'Intervals do not sum to 12';
     }
 
     // Save the name and steps
     this.id = id;
     this.name = name;
+    this.familyId = familyId;
     this.family = family;
+    this.mode = mode;
     this.steps = steps;
     this.tonic = Note.getNoteByPitchId(tonic);
     this.length = steps.length;
@@ -683,7 +736,6 @@ class Scale {
         notesToTest.push(notes);
         cost.push(count);
       }
-      console.log(cost);
 
       // Select the notes from the root with the fewest shifts
       return notesToTest[cost.indexOf(Math.min(...cost))];
@@ -714,7 +766,9 @@ class Scale {
           return new Scale(
             id, 
             mode["name"], 
-            family["name"], 
+            family["id"], 
+            family["name"],
+            i,
             rotate_left(family["steps"], i),
             tonic);
         }
@@ -725,3 +779,126 @@ class Scale {
 }  
 
 
+/**
+ * A class to represent a scale pattern
+ */
+class ScalePattern {
+
+  /**
+   * Construct the scale pattern
+   * @param scale The scale to use
+   * @param pattern The scale pattern
+   */
+  constructor(scale, pattern) {
+    this.scale = scale;
+    this.pattern = pattern;
+    this.tuning = ["e", "a", "d", "g", "b", "e"].reverse();
+    this.fretboard = new Fretboard(this.tuning, 24);
+  }
+
+  /**
+   * @returns The fret numbers
+   */
+  get frets() {
+  
+    // Compute ascending pitch indices
+    function getPitchIndices(scale, pattern) {
+      var pitchIndices = [];
+      var k = 0;
+      for (var j = 0; j < pattern.length; ++j) {
+        var stringPattern = pattern[pattern.length-1-j];
+        for (var i = 0; i < stringPattern.length; ++i) {
+          var degree = stringPattern[i];
+          var pitchIndex = scale.pitchIndices[degree-1];
+          if (k > 0 && pitchIndex < pitchIndices[k-1]) {
+            pitchIndex += Math.ceil((pitchIndices[k-1] - pitchIndex) / 12) * 12;
+          }
+          pitchIndices.push(pitchIndex);
+          k += 1;
+        }
+      }
+      return pitchIndices;
+    }
+
+    // Ascending indices of open frets
+    function getOpenStringIndices(fretboard) {
+      var openIndices = [];
+      for (var j = 0; j < fretboard.tuning.length; ++j) {
+        var pitchIndex = fretboard.openNoteIndex(fretboard.tuning.length-1-j);
+        if (j > 0 && pitchIndex < openIndices[j-1]) {
+          pitchIndex += Math.ceil((openIndices[j-1] - pitchIndex) / 12) * 12;
+        }
+        openIndices.push(pitchIndex);
+      }
+      return openIndices;
+    }
+
+    // The string and fret
+    function getFretPattern(scale, pattern, fretboard) {
+      var pitchIndices = getPitchIndices(scale, pattern);
+      var openIndices = getOpenStringIndices(fretboard);
+      var fretPattern = [];
+      var k = 0;
+      for (var j = 0; j < pattern.length; ++j) {
+        var openIndex = openIndices[j];
+        var stringPattern = pattern[pattern.length-1-j];
+        var frets = [];
+        for (var i = 0; i < stringPattern.length; ++i) {
+          var pitchIndex = pitchIndices[k];
+          frets.push(pitchIndex - openIndex);
+          k += 1;
+        }
+        fretPattern.push(frets);
+      }
+      fretPattern.reverse();
+    
+      // Find the min and ensure frets are > 0
+      var minFret = Math.min(...[].concat.apply([], fretPattern));
+      if (minFret <= 0) {
+        fretPattern = fretPattern.map(p => p.map(fret => fret + 12)); 
+      }
+
+      // Return the fret pattern
+      return fretPattern;
+    }
+    
+    // Return the fret pattern
+    return getFretPattern(this.scale, this.pattern, this.fretboard);
+  }
+
+  /**
+   * @returns The fret range
+   */
+  get fretRange() {
+    var frets = [].concat.apply([], this.frets);
+    return [Math.min(...frets), Math.max(...frets)];
+  }
+
+  /**
+   * Rotate the pattern for the mode
+   * @param pattern The pattern
+   * @param mode The mode
+   * @returns The rotated pattern
+   */
+  static getPatternForMode(pattern, mode) {
+    var degrees = [].concat.apply([], pattern);
+    var minDegree = Math.min(...degrees);
+    var maxDegree = Math.max(...degrees);
+    if (minDegree < 1) throw `Bad degree: ${minDegree}`; 
+    return pattern.map(
+      a => a.map(
+        degree => (degree - mode - 1 + maxDegree) % maxDegree + 1)); 
+  }
+
+  /**
+   * Get the pattern by scale
+   * @param scale The scale
+   * @returns A scale pattern list
+   */
+  static getPatternListByScale(scale) {
+    return scalePatternTable[scale.familyId].map(
+      pattern => new ScalePattern(
+        scale,
+        ScalePattern.getPatternForMode(pattern, scale.mode)));
+  }
+};

@@ -52,4 +52,13 @@ class Fretboard {
     return Note.getNoteByPitchIndex(this.noteIndex(string, fret));
   }
 
+  /**
+   * @param string The string number (high to low)
+   * @param pitchIndex The pitch index
+   * @returns The fret number
+   */
+  fret(string, pitchIndex) {
+    return (Pitch.getDiffByIndex(pitchIndex, this.openNoteIndex(string))+Pitch.numPitches) % Pitch.numPitches;
+  }
+
 }

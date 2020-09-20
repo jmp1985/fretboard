@@ -173,8 +173,36 @@ class FretboardDiagram {
   }
 
   /**
+   * Draw a single note
+   * @param string The string number
+   * @param fret The fret number
+   * @param colour The colour of the note
+   * @param text The text to write
+   */
+  drawNote(string, fret, colour, text) {
+    
+    // Draw a circle for the note
+    this.context.beginPath();
+    this.context.fillStyle=colour;
+    var x = this.gridToCanvasX(this.fretToGridX(fret+0.5));
+    var y = this.gridToCanvasY(this.stringToGridY(string));
+    this.context.arc(x, y, this.noteRadius, 0, 2 * Math.PI);
+    this.context.fill();
+   
+    // Draw some note labels
+    if (text != '') {
+      this.context.font = `${this.textSize}px Helvetica`;
+      this.context.textBaseline = "middle";
+      this.context.textAlign = "centre";
+      this.context.fillStyle = "white";
+      this.context.fillText(text, x, y);
+    }
+  }
+
+  /**
    * Draw the notes
-   * @param scale
+   * @param scale The scale to draw
+   * @param label What label to show on the notes
    */
   drawScale(scale, label='none') {
     var notes = scale.notes;
@@ -185,33 +213,70 @@ class FretboardDiagram {
           if (note.index == this.fretboard.note(j,i).index) {
  
             // Draw a circle for the note
-            this.context.beginPath();
             if (note.index == scale.tonic.index) {
-              this.context.fillStyle="red";
+              var colour = "red";
             } else {
-              this.context.fillStyle="black";
+              var colour = "black";
             }
-            var x = this.gridToCanvasX(this.fretToGridX(i+0.5));
-            var y = this.gridToCanvasY(this.stringToGridY(j));
-            this.context.arc(x, y, this.noteRadius, 0, 2 * Math.PI);
-            this.context.fill();
            
             // Draw some note labels
-            if (label != 'none') {
-              this.context.font = `${this.textSize}px Helvetica`;
-              this.context.textBaseline = "middle";
-              this.context.textAlign = "centre";
-              this.context.fillStyle = "white";
-              
-              if (label == 'degree') {
-                var text = k+1;
-              } else if (label == 'intervals') {
-                var  text = scale.formula[k];
-              } else if (label == 'notes') {
-                var text = note.name;
-              }
-              this.context.fillText(text, x, y);
+            if (label == 'none') {
+              var text = "";
+            } else if (label == 'degree') {
+              var text = k+1;
+            } else if (label == 'intervals') {
+              var  text = scale.formula[k];
+            } else if (label == 'notes') {
+              var text = note.name;
+            } else {
+              throw `Unknown label, ${label}`;
             }
+
+            // Draw the note
+            this.drawNote(j, i, colour, text);
+          }
+        }
+      }
+    }
+  }
+  
+  /**
+   * Draw the notes
+   * @param pattern The pattern to draw
+   * @param label What label to show on the notes
+   */
+  drawScalePattern(pattern, label='none') {
+    var patternFrets = pattern.frets;
+    var notes = pattern.scale.notes;
+    for (var k = 0; k < notes.length; ++k) {
+      for (var j = 0; j < this.numStrings; ++j) {
+        for (var i = this.firstFret; i < this.lastFret+1; ++i) {
+          var note = notes[k];
+          if (note.index == this.fretboard.note(j,i).index) {
+            // Draw a circle for the note
+            if (patternFrets[j].indexOf(i) == -1) {
+              var colour = "#dddddd";
+            } else if (note.index == pattern.scale.tonic.index) {
+              var colour = "red";
+            } else {
+              var colour = "black";
+            }
+           
+            // Draw some note labels
+            if (label == 'none') {
+              var text = "";
+            } else if (label == 'degree') {
+              var text = k+1;
+            } else if (label == 'intervals') {
+              var  text = pattern.scale.formula[k];
+            } else if (label == 'notes') {
+              var text = note.name;
+            } else {
+              throw `Unknown label, ${label}`;
+            }
+
+            // Draw the note
+            this.drawNote(j, i, colour, text);
           }
         }
       }
