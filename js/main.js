@@ -183,7 +183,8 @@ function loadFretboardDiagram() {
   var content = document.getElementById("fretboard-diagram")
   var canvas = document.createElement("canvas");
   content.innerHTML = "";
-  canvas.setAttribute("width", 1200);
+  canvas.setAttribute("id", "fretboard-diagram-canvas");
+  canvas.setAttribute("width", window.innerWidth * 0.9);
   canvas.setAttribute("height", canvas.width / 3.0);
   drawFretboardDiagram(canvas, scale, tonic, firstFret, lastFret, noteLabels);
   content.appendChild(canvas);
@@ -233,7 +234,7 @@ function loadScalePatternDiagram() {
   var content = document.getElementById("scale-pattern-diagram")
   var canvas = document.createElement("canvas");
   content.innerHTML = "";
-  canvas.setAttribute("width", 1200);
+  canvas.setAttribute("width", window.innerWidth * 0.9);
   canvas.setAttribute("height", canvas.width / 3.0);
   var context = canvas.getContext("2d");
 
@@ -345,5 +346,9 @@ function loadHeader() {
  */
 function load() {
   loadHeader();
+  loadContent();
+}
+
+function resize() {
   loadContent();
 }
