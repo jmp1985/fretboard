@@ -46,78 +46,6 @@ function loadInputForm() {
   addKeySelect();
 }
 
-/**
- * Draw the fretboard diagram
- */
-function drawFretboardDiagram(canvas, scale, tonic, firstFret=0, lastFret=12, label='none') {
-
-  // Get the document elements
-  var context = canvas.getContext("2d");
-  var tuning = ["e", "a", "d", "g", "b", "e"].reverse();
-
-  // Clear the canvas
-  context.clearRect(0, 0, canvas.width, canvas.height);
-    
-  // Get the notes in the scale and tonic
-  var scale = Scale.getScaleById(scale, tonic);
-
-  // Draw the fretboard
-  var fretboard = new FretboardDiagram(context, tuning, firstFret, lastFret);
-  fretboard.drawFretboard();
-  fretboard.drawScale(scale, label);
-
-}
-
-
-/**
- * Draw the scale diagram
- */
-function drawScaleDiagrams() {
-
-  // Get the document elements
-  var scale = document.getElementById("scale-select").value;
-  var tonic = document.getElementById("tonic-select").value;
-  var tuning = ["e", "a", "d", "g", "b", "e"].reverse();
-
-  // Get the scale patterns
-  var scalePatternList = ScalePattern.fromKnownScale(Scale.getScaleById(scale), tuning);
-  
-  // Create the document fragment to contain the canvas
-  var tree = document.createDocumentFragment();
-
-  // Loop through the scale patterns and display
-  for (var i = 0; i < scalePatternList.length; ++i) {
-
-    // Create the canvas for the diagram
-    var canvas = document.createElement("canvas");
-    canvas.setAttribute("id", `scale-pattern-${i}`);
-    canvas.setAttribute("width", 1200);
-    canvas.setAttribute("height", 512);
-    canvas.setAttribute("style", "border:1px solid black");
-    tree.appendChild(canvas);
-  }
-
-  // Add all the scale diagrams to the document
-  document.getElementById("scale-patterns").appendChild(tree);
-
-  // Loop through the scale patterns and display
-  for (var i = 0; i < scalePatternList.length; ++i) {
-
-    // Create the canvas for the diagram
-    var canvas = document.getElementById(`scale-pattern-${i}`);
-
-    // Get the context and clear
-    var context = canvas.getContext("2d");
-    context.clearRect(0, 0, canvas.width, canvas.height);
-  
-    // Draw the fretboard
-    var fretboard = new FretboardDiagram(context, tuning);
-    fretboard.drawFretboard();
-    //fretboard.drawScalePattern(scalePatternList[i]);
-  }
-
-}
-
 
 /**
  * Generate a table with scale information
@@ -168,6 +96,34 @@ function loadScaleInformationTable() {
 
 
 /**
+ * Generate the fretboard pattern diagram options
+ */
+function loadFretboardDiagramOptions() {
+
+  function addOption(select, value) {
+    var option = document.createElement("option");
+    option.setAttribute("value", value);
+    option.innerHTML = value;
+    select.appendChild(option);
+  }
+
+  // Add the options for first fret
+  var selectFirstFret = document.getElementById("select-first-fret");
+  selectFirstFret.innerHTML = "";
+  for (var i = 0; i < 12; ++i) {
+    addOption(selectFirstFret, i);
+  }
+  
+  // Add the options for last fret
+  var selectLastFret = document.getElementById("select-last-fret");
+  selectLastFret.innerHTML = "";
+  for (var i = 12; i < 25; ++i) {
+    addOption(selectLastFret, i);
+  }
+}
+
+
+/**
  * Generate the fretboard diagram
  */
 function loadFretboardDiagram() {
@@ -178,15 +134,29 @@ function loadFretboardDiagram() {
   var firstFret = parseInt(document.getElementById("select-first-fret").value);
   var lastFret = parseInt(document.getElementById("select-last-fret").value);
   var noteLabels = document.getElementById("select-note-labels").value;
+  var tuning = ["e", "a", "d", "g", "b", "e"].reverse();
 
-  // The fretboard diagram
+  // THe document elements
   var content = document.getElementById("fretboard-diagram")
   var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
   content.innerHTML = "";
   canvas.setAttribute("id", "fretboard-diagram-canvas");
   canvas.setAttribute("width", window.innerWidth * 0.9);
   canvas.setAttribute("height", canvas.width / 3.0);
-  drawFretboardDiagram(canvas, scale, tonic, firstFret, lastFret, noteLabels);
+
+  // Clear the canvas
+  context.clearRect(0, 0, canvas.width, canvas.height);
+    
+  // Get the notes in the scale and tonic
+  var scale = Scale.getScaleById(scale, tonic);
+
+  // Draw the fretboard
+  var fretboard = new FretboardDiagram(context, tuning, firstFret, lastFret);
+  fretboard.drawFretboard();
+  fretboard.drawScale(scale, noteLabels);
+
+  // Append the canvas
   content.appendChild(canvas);
 }
 
@@ -328,6 +298,7 @@ function loadChordTable() {
  */
 function loadContent() {
   loadScaleInformationTable();
+  loadFretboardDiagramOptions();
   loadFretboardDiagram();
   loadScalePatternDiagramOptions();
   loadScalePatternDiagram();
